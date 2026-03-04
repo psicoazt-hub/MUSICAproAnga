@@ -1,58 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Lírico COBAEM</title>
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCES Y SENTIMIENTOS</title>
+    
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
+    
     <style>
-        body { margin:0; background:#121212; color:white; font-family:sans-serif; text-align:center; }
-        .card { background:rgba(255,255,255,0.05); border-radius:20px; padding:20px; margin:15px; border:1px solid rgba(255,255,255,0.1); }
-        .player { width:100%; height:250px; background:#000; border-radius:15px; margin-top:10px; }
-        .btn { background:#00e676; color:black; border:none; padding:15px; border-radius:30px; width:100%; font-weight:bold; }
-        .locked { opacity:0.1; pointer-events:none; }
+        :root {
+            --oro: #D4AF37;
+            --cromo: #E8E8E8;
+            --fondo: #0a0a0a;
+        }
+        body {
+            background-color: var(--fondo);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container { max-width: 500px; margin: auto; }
+        .logo { width: 120px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--oro)); }
+        h1 { color: var(--oro); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }
+        
+        input {
+            width: 85%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 30px;
+            border: 2px solid var(--oro);
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        button {
+            background: linear-gradient(145deg, #D4AF37, #B8860B);
+            color: black;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .video-card {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 20px;
+            margin-top: 25px;
+            border: 1px solid #333;
+        }
+
+        .locked { opacity: 0.2; pointer-events: none; }
+        iframe { width: 100%; border-radius: 15px; border: 1px solid var(--oro); height: 250px; }
+        #mensaje { margin-top: 20px; color: #888; font-style: italic; }
     </style>
 </head>
 <body>
-    <div id="app" style="padding-top:20px;">
-        <div id="login" class="card">
-            <img src="logo.png" style="width:80px; border-radius:50%;">
-            <h2>LUCES Y SENTIMIENTOS</h2>
-            <input type="text" id="u" style="width:80%; padding:15px; border-radius:20px; border:none; margin-bottom:15px;" placeholder="Tu Nombre">
-            <button class="btn" onclick="entrar()">ENTRAR AL ENSAYO</button>
-        </div>
-        <div id="main" style="display:none;">
-            <div class="card" id="m1"><h3>1. CALENTAMIENTO</h3><div id="v1" class="player"></div></div>
-            <div class="card locked" id="m2"><h3>2. <span id="ng"></span></h3><div id="v2" class="player"></div></div>
-        </div>
+
+<div class="container">
+    <img src="icon.png" alt="Logo" class="logo">
+    <h1>Luces y Sentimientos</h1>
+    
+    <div id="login-section">
+        <input type="text" id="nombreAlumno" placeholder="Tu nombre artístico">
+        <br>
+        <button onclick="ingresar()">ENTRAR AL TALLER</button>
     </div>
-    <script>
-        let data, player, max = 0, t;
-        function entrar() {
-            google.script.run.withSuccessHandler(r => {
-                if(r) { data = r; document.getElementById('login').style.display='none'; document.getElementById('main').style.display='block'; document.getElementById('ng').innerText=r.grupo; loadV('v1', data.resp, next); }
-                else alert("No estás en la lista.");
-            }).getPermisos(document.getElementById('u').value);
-        }
-        function loadV(id, vid, cb) {
-            new YT.Player(id, { videoId: vid, events: { 'onStateChange': e => {
-                if(e.data == YT.PlayerState.PLAYING) {
-                    t = setInterval(() => {
-                        let c = e.target.getCurrentTime();
-                        if(c > max + 2) e.target.seekTo(max); else if(c > max) max = c;
-                        if(c >= e.target.getDuration()-1) { clearInterval(t); cb(); }
-                    }, 1000);
-                } else clearInterval(t);
-            }}});
-        }
-        function next() {
-            document.getElementById('m2').classList.remove('locked');
-            max = 0;
-            loadV('v2', data.vid, () => { google.script.run.registrarProgreso(data); alert("¡Rutina terminada!"); });
-        }
-    </script>
-</body>
-</html>
+
+    <div id="app-section" style="display:none;">
+        <h2 id="bienvenida" style="color: var(--oro);"></h2>
+        
+        <div class="video-card">
+            <h3 id="titulo1">1. Respiración</h3>
+            <div id="player1"></div>
+            <p id="status-video1" style="font-size:
+                
