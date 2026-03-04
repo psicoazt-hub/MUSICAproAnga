@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Lírico COBAEM</title>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+        body { margin:0; background:#121212; color:white; font-family:sans-serif; text-align:center; }
+        .card { background:rgba(255,255,255,0.05); border-radius:20px; padding:20px; margin:15px; border:1px solid rgba(255,255,255,0.1); }
+        .player { width:100%; height:250px; background:#000; border-radius:15px; margin-top:10px; }
+        .btn { background:#00e676; color:black; border:none; padding:15px; border-radius:30px; width:100%; font-weight:bold; }
+        .locked { opacity:0.1; pointer-events:none; }
+    </style>
+</head>
+<body>
+    <div id="app" style="padding-top:20px;">
+        <div id="login" class="card">
+            <img src="logo.png" style="width:80px; border-radius:50%;">
+            <h2>LUCES Y SENTIMIENTOS</h2>
+            <input type="text" id="u" style="width:80%; padding:15px; border-radius:20px; border:none; margin-bottom:15px;" placeholder="Tu Nombre">
+            <button class="btn" onclick="entrar()">ENTRAR AL ENSAYO</button>
+        </div>
+        <div id="main" style="display:none;">
+            <div class="card" id="m1"><h3>1. CALENTAMIENTO</h3><div id="v1" class="player"></div></div>
+            <div class="card locked" id="m2"><h3>2. <span id="ng"></span></h3><div id="v2" class="player"></div></div>
+        </div>
+    </div>
+    <script>
+        let data, player, max = 0, t;
+        function entrar() {
+            google.script.run.withSuccessHandler(r => {
+                if(r) { data = r; document.getElementById('login').style.display='none'; document.getElementById('main').style.display='block'; document.getElementById('ng').innerText=r.grupo; loadV('v1', data.resp, next); }
+                else alert("No estás en la lista.");
+            }).getPermisos(document.getElementById('u').value);
+        }
+        function loadV(id, vid, cb) {
+            new YT.Player(id, { videoId: vid, events: { 'onStateChange': e => {
+                if(e.data == YT.PlayerState.PLAYING) {
+                    t = setInterval(() => {
+                        let c = e.target.getCurrentTime();
+                        if(c > max + 2) e.target.seekTo(max); else if(c > max) max = c;
+                        if(c >= e.target.getDuration()-1) { clearInterval(t); cb(); }
+                    }, 1000);
+                } else clearInterval(t);
+            }}});
+        }
+        function next() {
+            document.getElementById('m2').classList.remove('locked');
+            max = 0;
+            loadV('v2', data.vid, () => { google.script.run.registrarProgreso(data); alert("¡Rutina terminada!"); });
+        }
+    </script>
+</body>
+</html>
