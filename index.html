@@ -2,77 +2,80 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Taller de Música - Antonio Zavala</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller de Música</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f0f0; }
-        .container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
-        button { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; }
-        iframe { width: 100%; height: 250px; display: none; margin-top: 20px; border-radius: 10px; }
-        #mensaje { color: red; margin-top: 10px; }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f4; }
+        .box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #28a745; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
+        #video-container { display: none; margin-top: 20px; }
+        iframe { width: 100%; height: 250px; border-radius: 10px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Taller de Música</h2>
-        <p>Ingresa tu nombre para comenzar:</p>
-        <input type="text" id="nombre" placeholder="Tu nombre (ej. Raul)">
-        <button onclick="buscarAlumno()">Entrar</button>
-        <div id="mensaje"></div>
-        
-        <h3 id="tituloNivel"></h3>
-        <iframe id="reproductor" src="" frameborder="0" allowfullscreen></iframe>
-        <button id="btnSiguiente" style="display:none; background:#007bff; margin-top:10px;" onclick="cargarSegundoNivel()">Siguiente Nivel</button>
+
+<div class="box">
+    <h2>Taller de Música</h2>
+    <div id="login">
+        <p>Escribe tu nombre:</p>
+        <input type="text" id="nombreAlumno" placeholder="Ej. Raul">
+        <br>
+        <button onclick="acceder()">Entrar</button>
     </div>
 
-    <script>
-        // TU LINK DE LAS 6:35 PM YA INTEGRADO
-        const urlScript = "https://script.google.com/macros/s/AKfycbyC-qG1e_M0vXpX5fQvY7Z2p7_7_uE0-Z8_U9R-m-2V-v1_X_X/exec"; 
-        
-        let videoVocalizacion = "";
-        let nombreUsuario = "";
+    <div id="video-container">
+        <h3 id="etapa">Nivel 1: Respiración</h3>
+        <iframe id="reproductor" src="" frameborder="0" allowfullscreen></iframe>
+        <br><br>
+        <button id="btnSig" onclick="siguienteNivel()" style="background:#007bff;">Siguiente Nivel</button>
+    </div>
+    <p id="error" style="color:red;"></p>
+</div>
 
-        function buscarAlumno() {
-            const nombre = document.getElementById('nombre').value.trim();
-            if (!nombre) return;
-            nombreUsuario = nombre;
+<script>
+    // ESTE ES TU LINK DE LAS 6:35 PM
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyC-qG1e_M0vXpX5fQvY7Z2p7_7_uE0-Z8_U9R-m-2V-v1_X_X/exec";
+    let datosAlumno = null;
 
-            fetch(`${urlScript}?nombre=${nombre}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.error) {
-                        document.getElementById('mensaje').innerText = "Nombre no registrado";
-                    } else {
-                        document.getElementById('mensaje').innerText = "";
-                        document.getElementById('nombre').style.display = "none";
-                        document.querySelector('button').style.display = "none";
-                        
-                        // Carga Nivel 1: Respiración
-                        document.getElementById('tituloNivel').innerText = "Nivel 1: Respiración";
-                        const idResp = data.respiracion;
-                        document.getElementById('reproductor').src = `https://www.youtube.com/embed/${idResp}?rel=0`;
-                        document.getElementById('reproductor').style.display = "block";
-                        videoVocalizacion = data.vocalizacion;
-                        
-                        // Mostramos botón para el siguiente después de un momento
-                        setTimeout(() => { document.getElementById('btnSiguiente').style.display = "inline-block"; }, 5000);
-                    }
-                });
-        }
+    function acceder() {
+        const nombre = document.getElementById("nombreAlumno").value.trim();
+        if(!nombre) return;
 
-        function cargarSegundoNivel() {
-            document.getElementById('tituloNivel').innerText = "Nivel 2: Vocalización";
-            document.getElementById('reproductor').src = `https://www.youtube.com/embed/${videoVocalizacion}?rel=0`;
-            document.getElementById('btnSiguiente').style.display = "none";
-            
-            // Registro de finalización en el Excel
-            fetch(urlScript, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ nombre: nombreUsuario })
-            });
-        }
-    </script>
+        fetch(`${scriptURL}?nombre=${nombre}`)
+        .then(res => res.json())
+        .then(data => {
+            if(data.error) {
+                document.getElementById("error").innerText = "Nombre no encontrado";
+            } else {
+                datosAlumno = data;
+                document.getElementById("login").style.display = "none";
+                document.getElementById("error").innerText = "";
+                document.getElementById("video-container").style.display = "block";
+                
+                // Carga Respiración
+                document.getElementById("reproductor").src = `https://www.youtube.com/embed/${data.respiracion}`;
+            }
+        })
+        .catch(err => {
+            document.getElementById("error").innerText = "Error de conexión";
+            console.error(err);
+        });
+    }
+
+    function siguienteNivel() {
+        document.getElementById("etapa").innerText = "Nivel 2: Vocalización";
+        document.getElementById("reproductor").src = `https://www.youtube.com/embed/${datosAlumno.vocalizacion}`;
+        document.getElementById("btnSig").style.display = "none";
+
+        // Registro automático en tu Excel
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ nombre: document.getElementById("nombreAlumno").value })
+        });
+    }
+</script>
+
 </body>
 </html>
