@@ -3,71 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller de Música Pro</title>
+    <title>Taller de Canto - Registro Diario</title>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; background-color: #1a1a1a; color: white; }
-        .box { background: #2d2d2d; padding: 30px; border-radius: 15px; box-shadow: 0px 10px 30px rgba(0,0,0,0.5); max-width: 420px; margin: auto; border: 1px solid #ceac00; }
-        input { width: 90%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #444; background: #333; color: white; font-size: 16px; text-align: center; }
-        button { background: #ceac00; color: black; border: none; padding: 12px; cursor: pointer; border-radius: 8px; font-weight: bold; width: 100%; font-size: 16px; }
-        #video-container { display: none; margin-top: 20px; }
-        iframe { width: 100%; height: 250px; border-radius: 10px; border: 2px solid #ceac00; }
-        #status { color: #ffd700; margin-top: 10px; font-size: 14px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #1a1a1a; color: white; text-align: center; padding: 20px; }
+        .contenedor { background: #2d2d2d; padding: 25px; border-radius: 20px; border: 2px solid #ceac00; max-width: 500px; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        input { width: 80%; padding: 12px; margin: 15px 0; border-radius: 8px; border: none; font-size: 16px; text-align: center; background: #404040; color: white; }
+        button { background: #ceac00; color: black; border: none; padding: 15px 30px; cursor: pointer; border-radius: 8px; font-weight: bold; width: 100%; transition: 0.3s; }
+        button:hover { background: #ffcc00; transform: scale(1.02); }
+        #video-wrapper { display: none; margin-top: 20px; }
+        h2 { color: #ceac00; text-transform: uppercase; }
+        #mensaje-enfado { display: none; color: #ff4444; font-weight: bold; margin-top: 20px; border: 1px solid #ff4444; padding: 10px; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2 style="color: #ceac00;">MÚSICA PRO</h2>
-    <p style="font-size: 14px; color: #aaa;">Taller de Canto - Angamacutiro</p>
+<div class="contenedor">
+    <h2>Música Pro - Ensayo</h2>
     
-    <div id="login">
-        <p>Escribe tu nombre para entrar:</p>
+    <div id="seccion-login">
+        <p>Introduce tu nombre para iniciar:</p>
         <input type="text" id="nombreAlumno" placeholder="Ej: Vanessa">
-        <button onclick="acceder()">ENTRAR AL TALLER</button>
-        <p id="status"></p>
+        <button onclick="validarAcceso()">ENTRAR AL ENSAYO</button>
+        <p id="status" style="margin-top:10px; color:#ffd700;"></p>
     </div>
 
-    <div id="video-container">
-        <h3 id="etapa" style="color: #ceac00;">Nivel 1: Respiración</h3>
-        <iframe id="reproductor" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <div id="video-wrapper">
+        <h3 id="titulo-paso" style="color: #ffd700;">Paso 1: Respiración</h3>
+        <div id="player"></div>
+        <p id="instruccion" style="font-size: 14px; margin-top: 10px; color: #aaa;">⚠️ No puedes adelantar el video. Debes terminarlo para avanzar.</p>
+    </div>
+
+    <div id="mensaje-enfado">
+        ¡Aún tienes pendiente el ensayo de hoy! No cierres la sesión hasta terminar.
     </div>
 </div>
 
 <script>
-    // TU LINK REAL DE LA VERSIÓN 7
-    const scriptURL = "https://script.google.com/macros/s/AKfycba9oViVSE-iXa79fxnNMWy6RLzV9IgTpOEFTRI0lO_VH43BLTq5Mv74cVEZMKfxTfHo/exec";
+    // --- PEGA TU LINK /EXEC AQUÍ ABAJO ---
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxAercRvWPbLDVRSVt06jspKXarOo-BSdQW04rmiG-1h0Wj36fp92t0Z614-C_mi76yxw/exec";
+    
+    let player;
+    let dataAlumno = {};
 
-    function acceder() {
+    function validarAcceso() {
         const nombre = document.getElementById("nombreAlumno").value.trim();
-        const statusDiv = document.getElementById("status");
+        if (!nombre) return alert("Escribe tu nombre");
         
-        if(!nombre) {
-            statusDiv.innerText = "⚠️ Escribe tu nombre.";
-            return;
-        }
-
-        statusDiv.innerText = "🔍 Buscando en la lista...";
-
-        fetch(`${scriptURL}?nombre=${nombre}`)
+        document.getElementById("status").innerText = "⏳ Verificando registro...";
+        
+        fetch(`${scriptURL}?nombre=${encodeURIComponent(nombre)}`)
         .then(res => res.json())
         .then(data => {
-            if(data.error) {
-                statusDiv.innerText = "❌ No estás en la lista. Revisa mayúsculas.";
+            if (data.error) {
+                document.getElementById("status").innerText = "❌ No estás en la lista.";
             } else {
-                document.getElementById("login").style.display = "none";
-                document.getElementById("video-container").style.display = "block";
-                
-                // Carga el video de YouTube que le toca
-                const videoId = data.respiracion;
-                document.getElementById("reproductor").src = "https://www.youtube.com/embed/" + videoId;
+                dataAlumno = data;
+                iniciarSistema();
             }
         })
         .catch(err => {
-            statusDiv.innerText = "⚠️ Error de conexión. Intenta de nuevo.";
             console.error(err);
+            alert("Error de conexión. Revisa que el Script de Google esté como 'Cualquier persona'.");
         });
     }
-</script>
 
+    function iniciarSistema() {
+        document.getElementById("seccion-login").style.display = "none";
+        document.getElementById("video-wrapper").style.display = "block";
+        document.getElementById("mensaje-enfado").style.display = "block";
+        
+        // Cargar video según en qué paso se quedó (Persistencia desde el Excel)
+        if(dataAlumno.pasoActual === "vocalizacion") {
+            document.getElementById("titulo-paso").innerText = "Paso 2: Vocalización (" + dataAlumno.grupo + ")";
+            cargarVideo(dataAlumno.vocalizacion, "Rutina Completada");
+        } else {
+            cargarVideo(dataAlumno.respiracion, "Respiración OK");
+        }
+    }
+
+    function cargarVideo(videoId, estatusAlTerminar) {
+        if (player) player.destroy();
+        
+        player = new YT.Player('player', {
+            height: '250',
+            width: '100%',
+            videoId: videoId,
+            playerVars: { 
+                'controls': 0,      // BLOQUEA ADELANTAR
+                'disablekb': 1,    // BLOQUEA TECLADO
+                'rel': 0, 
+                'modestbranding': 1 
+            },
+            events: {
+                'onStateChange': (event) => {
+                    if (event.data === YT.PlayerState.ENDED) {
+                        enviarAvanceExcel(estatusAlTerminar);
+                    }
+                }
+            }
+        });
+    }
+
+    function enviarAvanceExcel(estatus) {
+        // Registro en Hoja 1 del Excel
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({
+                nombre: dataAlumno.nombre,
+                grupo: dataAlumno.grupo,
+                estatus: estatus
+            })
+        }).then(() => {
+            if (estatus === "Respiración OK") {
+                document.getElementById("titulo-paso").innerText = "Paso 2: Vocalización (" + dataAlumno.grupo + ")";
+                cargarVideo(dataAlumno.vocalizacion, "Rutina Completada");
+            } else {
+                alert("✅ ¡Rutina cumplida! Registro guardado.");
+                document.getElementById("mensaje-enfado").style.display = "none";
+                location.reload();
+            }
+        });
+    }
+
+    // El mensaje de advertencia si intentan cerrar
+    window.onbeforeunload = function() {
+        if(document.getElementById("video-wrapper").style.display === "block") {
+            return "Tu ensayo está incompleto.";
+        }
+    };
+</script>
 </body>
 </html>
