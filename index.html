@@ -28,8 +28,8 @@
             margin-bottom: 20px; 
             border-radius: 50%;
         }
-        h2 { color: #fdfdfd; margin-bottom: 5px; }
-        p { color: #bbb; margin-bottom: 20px; }
+        h2 { color: #fdfdfd; margin-bottom: 5px; font-size: 24px; }
+        p { color: #bbb; margin-bottom: 25px; font-size: 14px; }
         input { 
             padding: 15px; 
             width: 85%; 
@@ -51,9 +51,7 @@
             font-weight: bold; 
             font-size: 18px;
             width: 93%;
-            transition: 0.3s;
         }
-        button:active { transform: scale(0.98); }
         .video-container { display: none; margin-top: 20px; }
         .reproductor {
             position: relative;
@@ -76,6 +74,7 @@
     <img src="logo.png" alt="Luces y Sentimientos" class="logo">
     <h2>Entrenamiento Vocal</h2>
     <p>Vocalización y Respiración Diafragmática</p>
+    
     <input type="password" id="pass" placeholder="Introduce tu clave de acceso">
     <br>
     <button onclick="verificar()">INICIAR SESIÓN</button>
@@ -99,6 +98,7 @@
 </div>
 
 <script>
+// Mantengo las claves que acordamos pero ya no dicen nada de "militar"
 const grupos = {
     "diamantes2": { nombre: "Vanessa/Anel", v: "FI2WXlo_p5A" },
     "refuerzo-alfa": { nombre: "Raul/Roberto", v: "KhLHMpUEmtE" },
