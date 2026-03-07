@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Entrenamiento Vocal - Dra. Voz</title>
+    <title>Entrenamiento Vocal - Luces y Sentimientos</title>
     <style>
-        /* Estilos para que funcione en Android e iPhone */
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            font-family: -apple-system, sans-serif; 
             text-align: center; 
-            background: #1a1a1a; 
+            background: #121212; 
             color: white; 
             padding: 20px;
             margin: 0;
@@ -17,87 +16,89 @@
         .contenedor { 
             max-width: 450px; 
             margin: auto; 
-            background: #333; 
-            padding: 25px; 
-            border-radius: 20px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            background: #1f1f1f; 
+            padding: 30px; 
+            border-radius: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            border: 1px solid #333;
         }
-        /* Ajuste para la imagen de la Rondalla */
         .logo { 
-            width: 120px; 
+            width: 180px; 
             height: auto; 
-            margin-bottom: 15px; 
+            margin-bottom: 20px; 
             border-radius: 50%;
-            border: 2px solid #28a745;
         }
+        h2 { color: #fdfdfd; margin-bottom: 5px; }
+        p { color: #bbb; margin-bottom: 20px; }
         input { 
-            padding: 12px; 
+            padding: 15px; 
             width: 85%; 
-            border-radius: 8px; 
-            border: none; 
-            margin-bottom: 15px; 
-            font-size: 16px; /* Evita zoom automático en iPhone */
+            border-radius: 10px; 
+            border: 1px solid #444; 
+            margin-bottom: 20px; 
+            font-size: 16px;
+            background: #2a2a2a;
+            color: white;
+            text-align: center;
         }
         button { 
-            padding: 15px 30px; 
+            padding: 15px; 
             background: #28a745; 
             color: white; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: 10px; 
             cursor: pointer; 
             font-weight: bold; 
-            font-size: 16px;
-            width: 90%;
+            font-size: 18px;
+            width: 93%;
+            transition: 0.3s;
         }
+        button:active { transform: scale(0.98); }
         .video-container { display: none; margin-top: 20px; }
         .reproductor {
             position: relative;
-            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+            padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
-            margin-bottom: 20px;
-            border-radius: 12px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            background: #000;
         }
         .reproductor iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
         }
-        #btnFinalizar { background: #d9534f; margin-top: 30px; }
+        #btnFinalizar { background: #d9534f; margin-top: 20px; }
     </style>
 </head>
 <body>
 
 <div class="contenedor" id="login">
-    <img src="logo.png" alt="Rondalla" class="logo">
-    <h2>🚀 Control de Escuadras</h2>
-    <p>Introduce tu clave de acceso:</p>
-    <input type="password" id="pass" placeholder="Clave militar...">
+    <img src="logo.png" alt="Luces y Sentimientos" class="logo">
+    <h2>Entrenamiento Vocal</h2>
+    <p>Vocalización y Respiración Diafragmática</p>
+    <input type="password" id="pass" placeholder="Introduce tu clave de acceso">
     <br>
-    <button onclick="verificar()">INICIAR ENTRENAMIENTO</button>
+    <button onclick="verificar()">INICIAR SESIÓN</button>
 </div>
 
 <div id="entrenamiento" class="video-container">
     <h2 id="saludo"></h2>
+    <hr style="border: 0.5px solid #444; margin: 20px 0;">
     
-    <h3>1. Respiración (General)</h3>
+    <h3>1. Respiración Diafragmática</h3>
     <div class="reproductor">
         <div id="video1"></div>
     </div>
 
-    <h3>2. Vocalización de Escuadra</h3>
+    <h3>2. Vocalización Dirigida</h3>
     <div class="reproductor">
         <div id="video2"></div>
     </div>
     
-    <button id="btnFinalizar" onclick="registrarAsistencia()">FINALIZAR Y SALIR</button>
+    <button id="btnFinalizar" onclick="registrarAsistencia()">FINALIZAR PRÁCTICA</button>
 </div>
 
 <script>
-// Base de datos de escuadras y videos
 const grupos = {
     "diamantes2": { nombre: "Vanessa/Anel", v: "FI2WXlo_p5A" },
     "refuerzo-alfa": { nombre: "Raul/Roberto", v: "KhLHMpUEmtE" },
@@ -114,13 +115,12 @@ function verificar() {
         alumnoActual = grupos[clave].nombre;
         document.getElementById("login").style.display = "none";
         document.getElementById("entrenamiento").style.display = "block";
-        document.getElementById("saludo").innerText = "¡En guardia, " + alumnoActual + "!";
+        document.getElementById("saludo").innerText = "Hola, " + alumnoActual;
         
-        // Carga de videos compatible con móviles
         document.getElementById("video1").innerHTML = `<iframe src="https://www.youtube.com/embed/Bu1xgyCO0Ps?rel=0" allowfullscreen></iframe>`;
         document.getElementById("video2").innerHTML = `<iframe src="https://www.youtube.com/embed/${grupos[clave].v}?rel=0" allowfullscreen></iframe>`;
     } else {
-        alert("Clave no reconocida. Intenta de nuevo.");
+        alert("Clave incorrecta. Por favor revisa tus datos.");
     }
 }
 
@@ -129,18 +129,17 @@ function registrarAsistencia() {
     const ENTRY_ID = "entry.1388268004"; 
     
     let datos = new FormData();
-    datos.append(ENTRY_ID, alumnoActual + " - Terminó Práctica");
+    datos.append(ENTRY_ID, alumnoActual + " - Completó Entrenamiento");
 
-    // Registro invisible
     fetch(FORM_URL, {
         method: "POST",
         mode: "no-cors",
         body: datos
     }).then(() => {
-        alert("¡Misión cumplida! Tu asistencia ha sido registrada.");
+        alert("¡Excelente trabajo! Tu práctica ha sido registrada.");
         location.reload(); 
     }).catch(() => {
-        alert("Asistencia enviada.");
+        alert("Registro completado.");
         location.reload();
     });
 }
