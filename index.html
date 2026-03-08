@@ -5,162 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Entrenamiento Vocal - Luces y Sentimientos</title>
     <style>
-        body { 
-            font-family: -apple-system, sans-serif; 
-            text-align: center; 
-            background: #121212; 
-            color: white; 
-            padding: 20px;
-            margin: 0;
-        }
-        .contenedor { 
-            max-width: 450px; 
-            margin: auto; 
-            background: #1f1f1f; 
-            padding: 30px; 
-            border-radius: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            border: 1px solid #333;
-        }
-        .logo { 
-            width: 180px; 
-            height: auto; 
-            margin-bottom: 20px; 
-            border-radius: 50%;
-        }
+        body { font-family: -apple-system, sans-serif; text-align: center; background: #121212; color: white; padding: 20px; margin: 0; }
+        .contenedor { max-width: 450px; margin: auto; background: #1f1f1f; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); border: 1px solid #333; }
+        .logo { width: 180px; height: auto; margin-bottom: 20px; border-radius: 50%; }
         h2 { color: #fdfdfd; margin-bottom: 5px; font-size: 24px; }
         p { color: #bbb; margin-bottom: 25px; font-size: 14px; }
-        input { 
-            padding: 15px; 
-            width: 85%; 
-            border-radius: 10px; 
-            border: 1px solid #444; 
-            margin-bottom: 20px; 
-            font-size: 16px;
-            background: #2a2a2a;
-            color: white;
-            text-align: center;
-        }
-        button { 
-            padding: 15px; 
-            background: #28a745; 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 18px;
-            width: 93%;
-        }
-        .video-container { display: none; margin-top: 20px; }
-        .reproductor {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            margin-bottom: 25px;
-            border-radius: 15px;
-            background: #000;
-        }
-        .reproductor iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
-        }
+        input { padding: 15px; width: 85%; border-radius: 10px; border: 1px solid #444; margin-bottom: 20px; font-size: 16px; background: #2a2a2a; color: white; text-align: center; }
+        button { padding: 15px; background: #28a745; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 18px; width: 95%; }
+        .seccion-practica { display: none; margin-top: 20px; }
+        .reproductor { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-bottom: 25px; border-radius: 15px; background: #000; }
+        .reproductor iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         #btnFinalizar { background: #d9534f; margin-top: 20px; }
+        audio { width: 100%; margin: 15px 0; }
     </style>
 </head>
 <body>
 
-<div class="contenedor" id="login">
-    <img src="logo.png" alt="Luces y Sentimientos" class="logo">
-    <h2>Entrenamiento Vocal</h2>
-    <p>Vocalización y Respiración Diafragmática</p>
-    
-    <input type="password" id="pass" placeholder="Introduce tu clave de acceso">
-    <br>
-    <button onclick="verificar()">INICIAR SESIÓN</button>
-</div>
-
-<div id="entrenamiento" class="video-container">
-    <h2 id="saludo"></h2>
-    <hr style="border: 0.5px solid #444; margin: 20px 0;">
-    
-    <h3>1. Respiración Diafragmática</h3>
-    <div class="reproductor">
-        <div id="video1"></div>
-    </div>
-
-    <h3>2. Vocalización Dirigida</h3>
-    <div class="reproductor">
-        <div id="video2"></div>
-    </div>
-    
-    <button id="btnFinalizar" onclick="registrarAsistencia()">FINALIZAR PRÁCTICA</button>
-</div>
-
-<script>
-// Mantengo las claves que acordamos pero ya no dicen nada de "militar"
-const grupos = {
-    "diamantes2": { nombre: "Vanessa/Anel", v: "FI2WXlo_p5A" },
-    "refuerzo-alfa": { nombre: "Raul/Roberto", v: "KhLHMpUEmtE" },
-    "graves-de-poder": { nombre: "Heidy/Nahomi", v: "9PmTOWQlIQI" },
-    "fuerza-central": { nombre: "Fabio", v: "iWlIJC0GLBo" },
-    "comando-poder": { nombre: "Tadeo", v: "kXx6fE2PMFs" }
-};
-
-let alumnoActual = "";
-
-function verificar() {
-    let clave = document.getElementById("pass").value.toLowerCase().trim();
-    if (grupos[clave]) {
-        alumnoActual = grupos[clave].nombre;
-        document.getElementById("login").style.display = "none";
-        document.getElementById("entrenamiento").style.display = "block";
-        document.getElementById("saludo").innerText = "Hola, " + alumnoActual;
+    <div class="contenedor" id="login">
+        <img src="logo.png" alt="Luces y Sentimientos" class="logo">
+        <h2>Luces y Sentimientos</h2>
+        <p>Vocalización y Respiración Diafragmática</p>
         
-        document.getElementById("video1").innerHTML = `<iframe src="https://www.youtube.com/embed/Bu1xgyCO0Ps?rel=0" allowfullscreen></iframe>`;
-        document.getElementById("video2").innerHTML = `<iframe src="https://www.youtube.com/embed/${grupos[clave].v}?rel=0" allowfullscreen></iframe>`;
-    } else {
-        alert("Clave incorrecta. Por favor revisa tus datos.");
-    }
-}
-
-function registrarAsistencia() {
-    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScPYbJ9L57BNI8PWePVVraifNihkflPZsdE8UlhasbiDRlqQA/formResponse";
-    const ENTRY_ID = "entry.1388268004"; 
-    
-    let datos = new FormData();
-    datos.append(ENTRY_ID, alumnoActual + " - Completó Entrenamiento");
-
-    fetch(FORM_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: datos
-    }).then(() => {
-        alert("¡Excelente trabajo! Tu práctica ha sido registrada.");
-        location.reload(); 
-    }).catch(() => {
-        alert("Registro completado.");
-        location.reload();
-    });
-}
-</script>
-    
-<div style="background: #fdf2e9; padding: 20px; border-radius: 15px; margin: 20px 10px; text-align: center; border: 2px solid #e67e22;">
-    <h3 style="color: #d35400; margin-bottom: 15px;">🎵 Pista Editada: PIEL CANELA</h3>
-    
-    <audio controls style="width: 100%; margin-bottom: 20px;">
-        <source src="PIEL CANELA.m4a" type="audio/mp4">
-        Tu cel no soporta este audio.
-    </audio>
-
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-        <p style="font-weight: bold; color: #5d4037; margin-bottom: 5px;">Guía para las cuerdas:</p>
-        <button style="padding: 15px; background: #FFD700; border: none; border-radius: 8px; font-weight: bold; color: #000;">⭐ ESTRELLAS (1ra Voz)</button>
-        <button style="padding: 15px; background: #87CEEB; border: none; border-radius: 8px; font-weight: bold; color: #000;">✨ AGUDOS PENOSOS (2da Voz)</button>
-        <button style="padding: 15px; background: #32CD32; border: none; border-radius: 8px; font-weight: bold; color: #000;">🎸 COMBO GRAVE (3ra Voz)</button>
+        <input type="password" id="pass" placeholder="Pon aquí tu contraseña">
+        <br>
+        <button onclick="verificar()">ENTRAR</button>
     </div>
-</div>
-    
+
+    <div id="entrenamiento" class="seccion-practica">
+        <div class="contenedor">
+            <h2 id="saludo"></h2>
+            <hr style="border: 0.5px solid #444; margin: 20px 0;">
+
+            <h3>1. Respiración Diafragmática</h3>
+            <div class="reproductor">
+                <iframe src="https://www.youtube.com/embed/FI2vk3o_pSA" allowfullscreen></iframe>
+            </div>
+
+            <h3>2. Vocalización Dirigida</h3>
+            <div class="reproductor">
+                <div id="videoPersonal"></div>
+            </div>
+
+            <h3>3. Pista de Ensayo</h3>
+            <p><strong>PIEL CANELA</strong></p>
+            <audio controls>
+                <source src="PIEL CANELA.m4a" type="audio/mp4">
+                Tu navegador no soporta el audio.
+            </audio>
+
+            <button id="btnFinalizar" onclick="registrarAsistencia()">FINALIZAR PRÁCTICA</button>
+        </div>
+    </div>
+
+    <script>
+        const grupos = {
+            "diamantes2": { nombre: "Vanessa / Anel", v: "FI2vk3o_pSA" },
+            "refuerzo-alfa": { nombre: "Raul / Roberto", v: "XH1uMjkDHTE" },
+            "graves-de-poder": { nombre: "Heidy / Nahomi", v: "BPWT0vQiIQI" },
+            "fuerza-central": { nombre: "Fabio", v: "IvGIJC9GLBo" },
+            "comando-poder": { nombre: "Tadeo", v: "kXh6E2PWFtI" }
+        };
+
+        let alumnoActual = "";
+
+        function verificar() {
+            const clave = document.getElementById("pass").value.trim();
+            if (grupos[clave]) {
+                alumnoActual = grupos[clave].nombre;
+                document.getElementById("login").style.display = "none";
+                document.getElementById("entrenamiento").style.display = "block";
+                document.getElementById("saludo").innerText = "Hola, " + alumnoActual;
+                
+                // Carga el video de vocalización que le toca
+                document.getElementById("videoPersonal").innerHTML = 
+                    `<iframe src="https://www.youtube.com/embed/${grupos[clave].v}" allowfullscreen></iframe>`;
+            } else {
+                alert("Clave incorrecta. Por favor revisa tus datos.");
+            }
+        }
+
+        function registrarAsistencia() {
+            const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfD3Pk3L6VRP4WFV1U7X4rLTGP5X8H8H8t0zK3A/formResponse";
+            const ENTRY_ID = "entry.1388268004";
+
+            let datos = new FormData();
+            datos.append(ENTRY_ID, alumnoActual + " - Completó práctica de PIEL CANELA");
+
+            fetch(FORM_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: datos
+            }).then(() => {
+                alert("¡Excelente trabajo! Tu práctica ha sido registrada.");
+                location.reload();
+            }).catch(() => {
+                alert("Registro completado.");
+                location.reload();
+            });
+        }
+    </script>
 </body>
 </html>
-
