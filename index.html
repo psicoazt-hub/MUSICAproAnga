@@ -58,12 +58,13 @@
     </div>
 
     <script>
+        // Claves y links de YouTube actualizados para cada tipo de voz
         const grupos = {
-            "diamantes2": { nombre: "Vanessa / Anel", v: "FI2vk3o_pSA" },
-            "refuerzo-alfa": { nombre: "Raul / Roberto", v: "XH1uMjkDHTE" },
-            "graves-de-poder": { nombre: "Heidy / Nahomi", v: "BPWT0vQiIQI" },
-            "fuerza-central": { nombre: "Fabio", v: "IvGIJC9GLBo" },
-            "comando-poder": { nombre: "Tadeo", v: "kXh6E2PWFtI" }
+            "diamantes2": { nombre: "Vanessa / Anel", v: "xNhiXqHX0f4" }, // Soprano
+            "refuerzo-alfa": { nombre: "Raul / Roberto", v: "e8k7ZvY6hao" }, // Tenor
+            "graves-de-poder": { nombre: "Heidy / Nahomi", v: "a621IZdXuus" }, // Contralto
+            "fuerza-central": { nombre: "Fabio", v: "9C7povzzMgI" }, // Barítono
+            "comando-poder": { nombre: "Tadeo", v: "JCnVXxNb6Qc" } // Bajo
         };
 
         let alumnoActual = "";
@@ -76,7 +77,6 @@
                 document.getElementById("entrenamiento").style.display = "block";
                 document.getElementById("saludo").innerText = "Hola, " + alumnoActual;
                 
-                // Carga el video de vocalización que le toca
                 document.getElementById("videoPersonal").innerHTML = 
                     `<iframe src="https://www.youtube.com/embed/${grupos[clave].v}" allowfullscreen></iframe>`;
             } else {
